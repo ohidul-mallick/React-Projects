@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, NavLink, useHistory } from "react-router-dom";
 import firebase from "../config/firebase";
 import AppContext from "../store/AppContext";
 
 export default function Header() {
   // const [isLoggedin, setIsLoggedin] = useState(false);
-  const [user, isLoggedin] = useContext(AppContext);
+  const [isLoggedin, user] = useContext(AppContext);
   const history = useHistory();
 
   const logout = () => {
@@ -26,17 +26,27 @@ export default function Header() {
       <ul className="flex justify-between px-10">
         <span className="flex">
           <li className="mr-5">
-            <Link to="/">Home</Link>
+            <NavLink
+              to="/"
+              exact={true}
+              activeClassName="underline text-blue-200"
+            >
+              Home
+            </NavLink>
           </li>
           <li>
-            <Link to="/gallery">Gallery</Link>
+            <NavLink to="/gallery" activeClassName="underline text-blue-200">
+              Gallery
+            </NavLink>
           </li>
         </span>
         <li>
           {isLoggedin ? (
             <button onClick={logout}>Logout</button>
           ) : (
-            <Link to="/login">Login</Link>
+            <NavLink to="/login" activeClassName="underline text-blue-200">
+              Login
+            </NavLink>
           )}
         </li>
       </ul>
