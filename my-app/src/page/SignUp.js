@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Redirect, useHistory } from "react-router";
 import firebase from "../config/firebase";
 
-export default function Login() {
+export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({ email: "", password: "" });
@@ -38,7 +38,7 @@ export default function Login() {
         <form action="" className="m-5 w-10/12" onSubmit={handleForm}>
           {error !== "" && <p>{error}</p>}
           <h1 className="w-full text-4xl tracking-widest text-center my-6">
-            Login
+            Sign Up Here
           </h1>
           <div className="w-full my-6">
             <input

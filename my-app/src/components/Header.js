@@ -22,24 +22,24 @@ export default function Header() {
   };
 
   return (
-    <nav className="py-5 bg-gray-900 text-white">
+    <nav className="py-5 bg-gray-900 text-white flex justify-between">
       <ul className="flex justify-between px-10">
-        <span className="flex">
-          <li className="mr-5">
-            <NavLink
-              to="/"
-              exact={true}
-              activeClassName="underline text-blue-200"
-            >
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/gallery" activeClassName="underline text-blue-200">
-              Gallery
-            </NavLink>
-          </li>
-        </span>
+        <li className="mr-5">
+          <NavLink
+            to="/"
+            exact={true}
+            activeClassName="underline text-blue-200"
+          >
+            Home
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/gallery" activeClassName="underline text-blue-200">
+            Gallery
+          </NavLink>
+        </li>
+      </ul>
+      <ul className="flex justify-between px-10">
         <li>
           {isLoggedin ? (
             <button onClick={logout}>Logout</button>
@@ -49,6 +49,13 @@ export default function Header() {
             </NavLink>
           )}
         </li>
+        {!isLoggedin && (
+          <li className="ml-5">
+            <NavLink to="/signup" activeClassName="underline text-blue-200">
+              Signup
+            </NavLink>
+          </li>
+        )}
       </ul>
     </nav>
   );
