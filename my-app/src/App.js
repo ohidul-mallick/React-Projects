@@ -1,52 +1,44 @@
 import "./assets/css/style.css";
-import React, { Component, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Images from "./components/Images";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import Home from "./page";
-
-const Gallery = () => {
-  return (
-    <section className="flex justify-center">
-      <div className="w-10/12 ">
-        <div className="text-center mb-4">
-          <Images />
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// const Home = () => {
-//   return (
-//     <div className="flex h-screen">
-//       <h1 className="m-auto text-3xl">Welcome Home</h1>
-//     </div>
-//   );
-// };
-const Login = () => {
-  return (
-    <div className="flex h-screen">
-      <h1 className="m-auto text-3xl">Login Page</h1>
-    </div>
-  );
-};
+import firebase from "./config/firebase";
+import routes from "./utils/routes";
+import Header from "./components/Header";
+import AppContext from "./store/AppContext";
 
 function App() {
+  const [isLoggedin, setIsLoggedin] = useState(false);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      console.log(user);
+      if (user) {
+        setIsLoggedin(true);
+        setUser(user);
+      } else {
+        setUser({});
+        setIsLoggedin(false);
+      }
+    });
+  }, []);
+
   return (
     <Router>
-      <Switch>
-        <Route path="/" exact={true}>
-          <Home />
-        </Route>
-
-        <Route path="/gallery" exact={true}>
-          <Gallery />
-        </Route>
-
-        <Route path="/login" exact={true}>
-          <Login />
-        </Route>
-      </Switch>
+      <AppContext.Provider value={[isLoggedin, user]}>
+        <Header />
+        <Switch>
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              exact={route.exact}
+              component={route.component}
+            />
+          ))}
+        </Switch>
+      </AppContext.Provider>
     </Router>
   );
 }
