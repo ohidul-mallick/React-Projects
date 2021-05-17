@@ -1,13 +1,7 @@
 import "./assets/css/style.css";
 import React, { useEffect, useRef, useState } from "react";
 import Images from "./components/Images";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
+import { Switch, Route, Link, Redirect, useLocation } from "react-router-dom";
 import firebase from "./config/firebase";
 import routes from "./utils/routes/index";
 import Header from "./components/Header";
@@ -16,6 +10,8 @@ import AuthRoute from "./utils/routes/AuthRoute";
 import GuestRoute from "./utils/routes/GuestRoute";
 import Loading from "./components/Loading";
 import NotFound from "./page/NotFound";
+import { AnimatePresence, motion } from "framer-motion";
+import AnimatedRoutes from "./utils/routes/AnimatedRoutes";
 
 function App() {
   const [isLoggedin, setIsLoggedin] = useState(false);
@@ -37,44 +33,36 @@ function App() {
       }
     });
   }, []);
+  const location = useLocation();
 
   if (isLoading) {
     return <Loading />;
   }
 
   return (
-    <Router>
-      <AppContext.Provider value={[isLoggedin, user]}>
-        <Header />
-        <Switch>
+    <AppContext.Provider value={[isLoggedin, user]}>
+      <Header />
+      <AnimatePresence exitBeforeEnter initial={false}>
+        <Switch key={location.pathname} location={location}>
           {routes.map((route, index) => {
             if (route.protected === "guest") {
               return (
-                <GuestRoute
-                  key={index}
-                  path={route.path}
-                  exact={route.exact}
-                  component={route.component}
-                />
+                <GuestRoute key={index} path={route.path} exact={route.exact}>
+                  <route.component />
+                </GuestRoute>
               );
             }
             if (route.protected === "auth") {
               return (
-                <AuthRoute
-                  key={index}
-                  path={route.path}
-                  exact={route.exact}
-                  component={route.component}
-                />
+                <AuthRoute key={index} path={route.path} exact={route.exact}>
+                  <route.component />
+                </AuthRoute>
               );
             }
             return (
-              <Route
-                key={index}
-                path={route.path}
-                exact={route.exact}
-                component={route.component}
-              />
+              <AnimatedRoutes key={index} path={route.path} exact={route.exact}>
+                <route.component />
+              </AnimatedRoutes>
             );
           })}
 
@@ -82,8 +70,8 @@ function App() {
             <NotFound />
           </Route>
         </Switch>
-      </AppContext.Provider>
-    </Router>
+      </AnimatePresence>
+    </AppContext.Provider>
   );
 }
 

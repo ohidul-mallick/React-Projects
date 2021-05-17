@@ -11,6 +11,7 @@ import useScroll from "../utils/hooks/useScroll";
 import useFetchImage from "../utils/hooks/useFetchImage";
 import Loading from "./Loading";
 import useDebounce from "../utils/hooks/useDebounce";
+import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 
 export default function Images() {
   const [page, setPage] = useState(1);
@@ -45,14 +46,47 @@ export default function Images() {
   };
 
   const ShowImg = () => {
-    return images.map((img, index) => (
-      <Image
-        image={img.urls.regular}
-        handleRemove={handleRemove}
-        index={index}
-        key={index}
-      />
-    ));
+    const [showPreview, setShowPreview] = useState(false);
+    return (
+      <AnimateSharedLayout>
+        {images.map((img, index) => (
+          <motion.div
+            className="w-1/6 p-1 border flex justify-center"
+            key={index}
+            layoutId={img.urls.regular}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <Image
+              show={() => setShowPreview(img.urls.regular)}
+              image={img.urls.regular}
+              handleRemove={handleRemove}
+              index={index}
+            />
+          </motion.div>
+        ))}
+        <AnimatePresence>
+          {showPreview && (
+            <motion.section
+              layoutId={showPreview}
+              exit={{ opacity: 0, rotate: 360, transition: { duration: 1 } }}
+              className="fixed w-full h-full flex justify-center items-center top-0 left-0 z-40"
+              onClick={() => setShowPreview(false)}
+            >
+              <div className="bg-white">
+                <img
+                  src={showPreview}
+                  className="rounded"
+                  width="400"
+                  height="auto"
+                  alt=""
+                />
+              </div>
+            </motion.section>
+          )}
+        </AnimatePresence>
+      </AnimateSharedLayout>
+    );
   };
 
   // const [typeingTimeout, setTypingTimeout] = useState("");
