@@ -45,59 +45,14 @@ export default function Images() {
     setImages(filterImg);
   };
 
-  const ShowImg = () => {
-    const [showPreview, setShowPreview] = useState(false);
-    return (
-      <AnimateSharedLayout>
-        {images.map((img, index) => (
-          <motion.div
-            className="w-1/6 p-1 border flex justify-center"
-            key={index}
-            layoutId={img.urls.regular}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <Image
-              show={() => setShowPreview(img.urls.regular)}
-              image={img.urls.regular}
-              handleRemove={handleRemove}
-              index={index}
-            />
-          </motion.div>
-        ))}
-        <AnimatePresence>
-          {showPreview && (
-            <motion.section
-              layoutId={showPreview}
-              exit={{ opacity: 0, rotate: 360, transition: { duration: 1 } }}
-              className="fixed w-full h-full flex justify-center items-center top-0 left-0 z-40"
-              onClick={() => setShowPreview(false)}
-            >
-              <div className="bg-white">
-                <img
-                  src={showPreview}
-                  className="rounded"
-                  width="400"
-                  height="auto"
-                  alt=""
-                />
-              </div>
-            </motion.section>
-          )}
-        </AnimatePresence>
-      </AnimateSharedLayout>
-    );
-  };
+  const [showPreview, setShowPreview] = useState(false);
 
-  // const [typeingTimeout, setTypingTimeout] = useState("");
   const debounce = useDebounce();
   const handleInput = (e) => {
     e.preventDefault();
     const text = e.target.value;
 
     debounce(() => setSearchItem(text), 1000);
-
-    // setSearchItem(text);
   };
 
   return (
@@ -114,7 +69,6 @@ export default function Images() {
       </div>
       {errors.length > 0 ? (
         <div className="flex h-screen">
-          {console.log(errors.length)}
           <p className="m-auto">{errors}</p>
         </div>
       ) : null}
@@ -122,7 +76,48 @@ export default function Images() {
       {errors.length > 0 ? null : (
         <div>
           <div className="flex flex-wrap">
-            <ShowImg />
+            <AnimateSharedLayout>
+              {images.map((img, index) => (
+                <motion.div
+                  className="w-1/6 p-1 border flex justify-center"
+                  key={index}
+                  layoutId={img.urls.regular}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  <Image
+                    show={() => setShowPreview(img.urls.regular)}
+                    image={img.urls.regular}
+                    handleRemove={handleRemove}
+                    index={index}
+                  />
+                </motion.div>
+              ))}
+              <AnimatePresence>
+                {showPreview && (
+                  <motion.section
+                    layoutId={showPreview}
+                    exit={{
+                      opacity: 0,
+                      rotate: 360,
+                      transition: { duration: 1 },
+                    }}
+                    className="fixed w-full h-full flex justify-center items-center top-0 left-0 z-40"
+                    onClick={() => setShowPreview(false)}
+                  >
+                    <div className="bg-white">
+                      <img
+                        src={showPreview}
+                        className="rounded"
+                        width="400"
+                        height="auto"
+                        alt=""
+                      />
+                    </div>
+                  </motion.section>
+                )}
+              </AnimatePresence>
+            </AnimateSharedLayout>
           </div>
           <button
             onClick={() =>

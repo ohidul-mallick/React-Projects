@@ -33,9 +33,18 @@ export default function Header() {
             Home
           </NavLink>
         </li>
-        <li>
+        <li className="mr-5">
           <NavLink to="/gallery" activeClassName="underline text-blue-200">
             Gallery
+          </NavLink>
+        </li>
+        <li className="mr-5">
+          <NavLink
+            to="/tensorflow"
+            exact={true}
+            activeClassName="underline text-blue-200"
+          >
+            Tensorflow
           </NavLink>
         </li>
       </ul>
