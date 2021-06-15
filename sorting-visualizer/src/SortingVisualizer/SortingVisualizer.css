@@ -1,0 +1,12 @@
+.array__container {
+  position: absolute;
+  /* bottom: 50px; */
+  left: 100px;
+  right: 100px;
+}
+.array__bar {
+  width: 2px;
+  background-color: indianred;
+  display: inline-block;
+  margin: 0 1px;
+}
